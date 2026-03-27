@@ -1,0 +1,5 @@
+{
+  "name": "Dragonfly - Digital Menu",
+  "description": "Digital menu for Dragonfly Live Music Pub, optimized for mobile.",
+  "requestFramePermissions": ["geolocation"]
+}

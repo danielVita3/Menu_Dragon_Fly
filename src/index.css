@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@theme {
+  --color-wood-dark: #1a0f08;
+  --color-wood-medium: #332114;
+  --color-wood-light: #5c3d27;
+  --color-beige: #f5e6d3;
+  --color-cream: #fff9f0;
+  --color-gold: #d4af37;
+  --color-accent-orange: #ff8c00;
+  
+  --font-serif: "Playfair Display", serif;
+  --font-sans: "Inter", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-wood-dark text-cream font-sans antialiased relative overflow-x-hidden;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+    background-attachment: fixed;
+  }
+
+  body::before {
+    content: "";
+    @apply fixed inset-0 -z-10 opacity-30;
+    background: radial-gradient(circle at 50% 50%, var(--color-wood-light) 0%, transparent 70%);
+    animation: pulse-bg 15s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes pulse-bg {
+  0% { transform: translate(-10%, -10%) scale(1); }
+  50% { transform: translate(10%, 5%) scale(1.2); }
+  100% { transform: translate(-5%, 15%) scale(0.9); }
+}
+
+.wood-overlay {
+  background: linear-gradient(to bottom, rgba(26, 15, 8, 0.8), rgba(26, 15, 8, 0.98));
+}
+
+.glass-header {
+  @apply backdrop-blur-md bg-wood-dark/95 border-b border-wood-light/10;
+}
+
+.card-shadow {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.vintage-title {
+  @apply font-serif font-bold tracking-tight;
+}
+
+/* Hide scrollbar but keep functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
