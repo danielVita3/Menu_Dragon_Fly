@@ -663,6 +663,15 @@ export default function App() {
     setIsAuthenticated(!!identity.currentUser());
     setIsAuthReady(true);
 
+    const hash = typeof window !== 'undefined' ? window.location.hash.replace(/^#/, '') : '';
+    const hashParams = new URLSearchParams(hash);
+    if (hashParams.get('invite_token')) {
+      identity.open('signup');
+    }
+    if (hashParams.get('recovery_token')) {
+      identity.open('recovery');
+    }
+
     if (identity.currentUser() && isAdminRoute) {
       setIsAdminOpen(true);
     }
