@@ -642,6 +642,11 @@ export default function App() {
   const normalizedPath =
     typeof window !== 'undefined' ? window.location.pathname.replace(/\/+$/, '') || '/' : '';
 
+  const authHashParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.hash.replace(/^#/, '')) : null;
+  const authQueryParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+  const hasInviteToken = !!(authHashParams?.get('invite_token') || authQueryParams?.get('invite_token'));
+  const hasRecoveryToken = !!(authHashParams?.get('recovery_token') || authQueryParams?.get('recovery_token'));
+
   const isAdminRoute = typeof window !== 'undefined' && normalizedPath === '/peppoo7';
 
   useEffect(() => {
@@ -663,12 +668,10 @@ export default function App() {
     setIsAuthenticated(!!identity.currentUser());
     setIsAuthReady(true);
 
-    const hash = typeof window !== 'undefined' ? window.location.hash.replace(/^#/, '') : '';
-    const hashParams = new URLSearchParams(hash);
-    if (hashParams.get('invite_token')) {
+    if (hasInviteToken) {
       identity.open('signup');
     }
-    if (hashParams.get('recovery_token')) {
+    if (hasRecoveryToken) {
       identity.open('recovery');
     }
 
@@ -687,13 +690,13 @@ export default function App() {
       setIsAuthenticated(false);
       setIsAdminOpen(false);
     });
-  }, [isAdminRoute]);
+  }, [isAdminRoute, hasInviteToken, hasRecoveryToken]);
 
   useEffect(() => {
-    if (!isAuthReady || !isAdminRoute || isAuthenticated) return;
+    if (!isAuthReady || !isAdminRoute || isAuthenticated || hasInviteToken || hasRecoveryToken) return;
     const identity = window.netlifyIdentity;
     identity?.open('login');
-  }, [isAuthReady, isAdminRoute, isAuthenticated]);
+  }, [isAuthReady, isAdminRoute, isAuthenticated, hasInviteToken, hasRecoveryToken]);
 
   useEffect(() => {
     try {
