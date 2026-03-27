@@ -101,7 +101,7 @@ const Header = ({
       )}
     </div>
     
-    <div className="absolute right-[10px] md:right-[14px] top-1/2 -translate-y-1/2 flex items-center justify-end w-[124px]">
+    <div className="absolute right-[10px] md:right-[14px] top-1/2 -translate-y-1/2 flex items-center justify-end w-[88px]">
       {showBack ? (
         <button
           onClick={onLogoClick}
@@ -111,7 +111,7 @@ const Header = ({
           <img
             src="/dragonfly-logo.png"
             alt="Dragonfly logo"
-            className="h-[97px] md:h-[106px] w-auto object-contain"
+            className="h-[64px] md:h-[72px] w-auto object-contain"
             referrerPolicy="no-referrer"
           />
         </button>
@@ -180,7 +180,7 @@ const CategoryGrid = ({ categories, onSelect }: { categories: Category[]; onSele
           <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-colors" />
           <div className="absolute inset-0 flex items-center justify-center p-2 text-center">
             <div className="flex flex-col items-center">
-              <span className="vintage-title text-sm text-white uppercase tracking-wider">{cat.name}</span>
+              <span className="vintage-title text-base md:text-lg text-white uppercase tracking-wider">{cat.name}</span>
             </div>
           </div>
         </motion.div>
@@ -639,9 +639,18 @@ export default function App() {
   const [isAuthReady, setIsAuthReady] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const isAdminRoute =
-    typeof window !== 'undefined' &&
-    (window.location.pathname === '/admin' || new URLSearchParams(window.location.search).get('admin') === '1');
+  const normalizedPath =
+    typeof window !== 'undefined' ? window.location.pathname.replace(/\/+$/, '') || '/' : '';
+
+  const isAdminRoute = typeof window !== 'undefined' && normalizedPath === '/peppoo7';
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const currentPath = window.location.pathname.replace(/\/+$/, '') || '/';
+    if (currentPath !== '/' && currentPath !== '/peppoo7') {
+      window.history.replaceState({}, '', '/');
+    }
+  }, []);
 
   useEffect(() => {
     const identity = window.netlifyIdentity;
@@ -758,7 +767,10 @@ export default function App() {
   }, [currentCategory, searchQuery]);
 
   return (
-    <div className="min-h-screen pb-0">
+    <div className="min-h-screen pb-0 relative">
+      <div className="pointer-events-none fixed inset-0 z-0 bg-gradient-to-b from-wood-dark/30 via-wood-dark/10 to-wood-dark/40" />
+
+      <div className="relative z-10">
       <Header 
         onMenuClick={() => setIsSidebarOpen(true)} 
         onBack={() => setCurrentCategory(null)}
@@ -895,6 +907,7 @@ export default function App() {
           )}
         </AnimatePresence>
       </main>
+      </div>
     </div>
   );
 }
