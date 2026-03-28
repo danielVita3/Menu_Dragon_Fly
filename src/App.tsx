@@ -45,6 +45,45 @@ declare global {
   }
 }
 
+// --- Image Compression Utility ---
+const compressImage = (file: File, maxWidth = 800, maxHeight = 800, quality = 0.7): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target?.result as string;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > maxWidth) {
+            height *= maxWidth / width;
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width *= maxHeight / height;
+            height = maxHeight;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return resolve(img.src);
+        
+        ctx.drawImage(img, 0, 0, width, height);
+        // Compress as WebP for smaller size if supported, fallback to JPEG
+        resolve(canvas.toDataURL('image/webp', quality));
+      };
+      img.onerror = (e) => reject(e);
+    };
+    reader.onerror = (e) => reject(e);
+  });
+};
+
 // --- Components ---
 
 const Header = ({ 
@@ -532,20 +571,16 @@ const AdminPanel = ({
                       <input
                         type="file"
                         accept="image/*"
-                        onChange={(e) => {
+                        onChange={async (e) => {
                           const file = e.target.files?.[0];
                           if (!file) return;
-                          // If file is very large (> 1MB), warn the user
-                          if (file.size > 1024 * 1024) {
-                             alert("Attenzione: l'immagine e grande (" + Math.round(file.size/1024/1024) + "MB). Il salvataggio del menu potrebbe fallire per limiti di spazio del server. Consigliamo di caricare l'immagine su un sito esterno e incollare l'URL sotto.");
+                          try {
+                            const compressed = await compressImage(file, 800, 800, 0.7);
+                            updateCategoryField('image', compressed);
+                          } catch (err) {
+                            console.error('Failed to compress image:', err);
+                            alert("Errore durante l'elaborazione dell'immagine.");
                           }
-                          const reader = new FileReader();
-                          reader.onload = (ev) => {
-                            if (ev.target?.result) {
-                              updateCategoryField('image', ev.target.result as string);
-                            }
-                          };
-                          reader.readAsDataURL(file);
                         }}
                         className="text-sm text-beige file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-gold file:text-wood-dark hover:file:bg-accent-orange transition-colors"
                       />
@@ -594,19 +629,16 @@ const AdminPanel = ({
                           <input
                             type="file"
                             accept="image/*"
-                            onChange={(e) => {
+                            onChange={async (e) => {
                               const file = e.target.files?.[0];
                               if (!file) return;
-                              if (file.size > 1024 * 1024) {
-                                alert("Attenzione: l'immagine e grande (" + Math.round(file.size/1024/1024) + "MB). Il salvataggio del menu potrebbe fallire per limiti di spazio del server. Consigliamo di caricare l'immagine su un sito esterno e incollare l'URL sotto.");
+                              try {
+                                const compressed = await compressImage(file, 600, 600, 0.7);
+                                updateProductField(product.id, 'image', compressed);
+                              } catch (err) {
+                                console.error('Failed to compress image:', err);
+                                alert("Errore durante l'elaborazione dell'immagine.");
                               }
-                              const reader = new FileReader();
-                              reader.onload = (ev) => {
-                                if (ev.target?.result) {
-                                  updateProductField(product.id, 'image', ev.target.result as string);
-                                }
-                              };
-                              reader.readAsDataURL(file);
                             }}
                             className="text-sm text-beige file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-gold file:text-wood-dark hover:file:bg-accent-orange transition-colors"
                           />
