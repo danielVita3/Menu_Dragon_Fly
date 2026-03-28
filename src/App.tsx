@@ -628,6 +628,43 @@ const AdminPanel = ({
   );
 };
 
+const AdminAccessGate = ({
+  isAuthReady,
+  hasIdentity,
+  onOpenLogin,
+}: {
+  isAuthReady: boolean;
+  hasIdentity: boolean;
+  onOpenLogin: () => void;
+}) => (
+  <div className="fixed inset-0 z-[85] bg-black/75 backdrop-blur-sm flex items-center justify-center px-4">
+    <div className="w-full max-w-md rounded-2xl border border-gold/25 bg-wood-dark p-6 md:p-7 card-shadow">
+      <h2 className="vintage-title text-2xl text-gold mb-3">Accesso Admin</h2>
+      <p className="text-beige/80 text-sm leading-relaxed mb-5">
+        Inserisci email e password tramite il login Netlify per entrare nel pannello di gestione menu.
+      </p>
+
+      {hasIdentity ? (
+        <button
+          onClick={onOpenLogin}
+          className="w-full rounded-xl bg-gold text-wood-dark py-3 font-semibold uppercase tracking-wider text-sm hover:bg-accent-orange transition-colors"
+          disabled={!isAuthReady}
+        >
+          {isAuthReady ? 'Apri Login' : 'Caricamento...'}
+        </button>
+      ) : (
+        <div className="rounded-xl border border-red-300/35 bg-red-500/10 px-4 py-3 text-sm text-red-100">
+          Login non disponibile: il widget Netlify Identity non e stato caricato.
+        </div>
+      )}
+
+      <p className="mt-4 text-xs text-beige/55">
+        Se hai chiuso il popup o non compare il campo password, premi di nuovo "Apri Login".
+      </p>
+    </div>
+  </div>
+);
+
 // --- Main App ---
 
 export default function App() {
@@ -644,18 +681,16 @@ export default function App() {
 
   const authHashParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.hash.replace(/^#/, '')) : null;
   const authQueryParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
-  const hasInviteToken = !!(authHashParams?.get('invite_token') || authQueryParams?.get('invite_token'));
+  const hasInviteToken = !!(
+    authHashParams?.get('invite_token') ||
+    authQueryParams?.get('invite_token') ||
+    authHashParams?.get('confirmation_token') ||
+    authQueryParams?.get('confirmation_token')
+  );
   const hasRecoveryToken = !!(authHashParams?.get('recovery_token') || authQueryParams?.get('recovery_token'));
 
   const isAdminRoute = typeof window !== 'undefined' && normalizedPath === '/peppoo7';
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const currentPath = window.location.pathname.replace(/\/+$/, '') || '/';
-    if (currentPath !== '/' && currentPath !== '/peppoo7') {
-      window.history.replaceState({}, '', '/');
-    }
-  }, []);
+  const hasIdentity = typeof window !== 'undefined' && !!window.netlifyIdentity;
 
   useEffect(() => {
     const identity = window.netlifyIdentity;
@@ -697,6 +732,10 @@ export default function App() {
     const identity = window.netlifyIdentity;
     identity?.open('login');
   }, [isAuthReady, isAdminRoute, isAuthenticated, hasInviteToken, hasRecoveryToken]);
+
+  const openAdminLogin = () => {
+    window.netlifyIdentity?.open('login');
+  };
 
   useEffect(() => {
     try {
@@ -817,6 +856,14 @@ export default function App() {
         }}
         onLogout={logoutAdmin}
       />
+
+      {isAdminRoute && !isAuthenticated && (
+        <AdminAccessGate
+          isAuthReady={isAuthReady}
+          hasIdentity={hasIdentity}
+          onOpenLogin={openAdminLogin}
+        />
+      )}
 
       <main className="pt-16">
         <AnimatePresence mode="wait">
