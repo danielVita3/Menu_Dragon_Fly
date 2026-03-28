@@ -872,11 +872,13 @@ export default function App() {
     }
 
     try {
-      identity.init();
+      // Netlify widget auto-initializes on DOMContentLoaded.
+      // Calling init() again can destroy the token-triggered modal.
+      // We only bind the logic.
       setIsAuthenticated(!!identity.currentUser());
-      console.log('Netlify Identity initialized successfully');
+      console.log('Netlify Identity state checked successfully');
     } catch (err) {
-      console.error('Failed to initialize Netlify Identity:', err);
+      console.error('Failed to check Netlify Identity:', err);
     }
     setIsAuthReady(true);
     
