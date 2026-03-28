@@ -535,6 +535,10 @@ const AdminPanel = ({
                         onChange={(e) => {
                           const file = e.target.files?.[0];
                           if (!file) return;
+                          // If file is very large (> 1MB), warn the user
+                          if (file.size > 1024 * 1024) {
+                             alert("Attenzione: l'immagine e grande (" + Math.round(file.size/1024/1024) + "MB). Il salvataggio del menu potrebbe fallire per limiti di spazio del server. Consigliamo di caricare l'immagine su un sito esterno e incollare l'URL sotto.");
+                          }
                           const reader = new FileReader();
                           reader.onload = (ev) => {
                             if (ev.target?.result) {
@@ -593,6 +597,9 @@ const AdminPanel = ({
                             onChange={(e) => {
                               const file = e.target.files?.[0];
                               if (!file) return;
+                              if (file.size > 1024 * 1024) {
+                                alert("Attenzione: l'immagine e grande (" + Math.round(file.size/1024/1024) + "MB). Il salvataggio del menu potrebbe fallire per limiti di spazio del server. Consigliamo di caricare l'immagine su un sito esterno e incollare l'URL sotto.");
+                              }
                               const reader = new FileReader();
                               reader.onload = (ev) => {
                                 if (ev.target?.result) {
@@ -1052,7 +1059,15 @@ export default function App() {
             if (res.ok) {
               alert('✅ Nuovo menù pubblicato istantaneamente per tutti i clienti!');
             } else {
-              alert('Attenzione: Salvataggio Cloud fallito (' + res.status + '). Riprova.');
+              let errorMsg = 'Salvataggio Cloud fallito (' + res.status + ')';
+              try {
+                const errData = await res.json();
+                if (errData.error) errorMsg += ': ' + errData.error;
+                if (errData.details) errorMsg += '\nDettagli: ' + errData.details;
+              } catch (e) {
+                // Ignore parse error
+              }
+              alert('Attenzione: ' + errorMsg + '\n\nSe hai inserito immagini grandi, prova a usare URL invece di caricare dal dispositivo.');
             }
           } catch (e) {
             console.error(e);

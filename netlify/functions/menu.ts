@@ -22,9 +22,9 @@ export const handler: Handler = async (event: HandlerEvent, context: HandlerCont
         headers,
         body: JSON.stringify(data || null)
       };
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      return { statusCode: 500, headers, body: JSON.stringify({ error: 'Store read error' }) };
+      return { statusCode: 500, headers, body: JSON.stringify({ error: 'Store read error', details: e.message }) };
     }
   }
 
@@ -36,16 +36,17 @@ export const handler: Handler = async (event: HandlerEvent, context: HandlerCont
     }
 
     try {
-      const body = JSON.parse(event.body || "[]");
-      await store.setJSON("latest", body);
+      const rawBody = event.isBase64Encoded ? Buffer.from(event.body || "", 'base64').toString('utf-8') : (event.body || "[]");
+      const parsedBody = JSON.parse(rawBody);
+      await store.setJSON("latest", parsedBody);
       return {
         statusCode: 200,
         headers,
         body: JSON.stringify({ success: true, message: "Menu saved successfully" })
       };
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      return { statusCode: 500, headers, body: JSON.stringify({ error: 'Store write error' }) };
+      return { statusCode: 500, headers, body: JSON.stringify({ error: 'Store write error', details: e.message }) };
     }
   }
 
