@@ -381,7 +381,7 @@ const AdminPanel = ({
     setDraft((prev) => prev.map((cat) => (cat.id === selectedCategoryId ? { ...cat, [field]: value } : cat)));
   };
 
-  const updateProductField = (productId: string, field: keyof Product, value: string) => {
+  const updateProductField = (productId: string, field: keyof Product, value: any) => {
     setDraft((prev) =>
       prev.map((cat) => {
         if (cat.id !== selectedCategoryId) return cat;
@@ -391,7 +391,7 @@ const AdminPanel = ({
             if (product.id !== productId) return product;
 
             if (field === 'allergens') {
-              const allergens = value
+              const allergens = (value as string)
                 .split(',')
                 .map((item) => item.trim())
                 .filter(Boolean);
@@ -519,23 +519,34 @@ const AdminPanel = ({
                     <input
                       value={selectedCategory.name}
                       onChange={(event) => updateCategoryField('name', event.target.value)}
-                      className="bg-wood-medium/20 border border-gold/20 rounded-lg px-3 py-2 text-beige"
+                      className="flex-1 bg-wood-medium/20 border border-gold/20 rounded-lg px-3 py-2 text-beige"
                       placeholder="Nome categoria"
                     />
-                    <input
-                      value={selectedCategory.image}
-                      onChange={(event) => updateCategoryField('image', event.target.value)}
-                      className="bg-wood-medium/20 border border-gold/20 rounded-lg px-3 py-2 text-beige"
-                      placeholder="URL immagine categoria"
-                    />
-                    <a
-                      href={IMAGE_UPLOAD_HELPER_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="md:col-span-2 text-xs text-gold/80 hover:text-gold transition-colors"
-                    >
-                      Carica immagine e incolla URL
-                    </a>
+                    <div className="md:col-span-2 flex flex-col gap-2 p-3 bg-wood-medium/10 rounded-xl border border-gold/20">
+                      <label className="text-xs uppercase tracking-widest text-gold/70">Immagine Categoria</label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          const reader = new FileReader();
+                          reader.onload = (ev) => {
+                            if (ev.target?.result) {
+                              updateCategoryField('image', ev.target.result as string);
+                            }
+                          };
+                          reader.readAsDataURL(file);
+                        }}
+                        className="text-sm text-beige file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-gold file:text-wood-dark hover:file:bg-accent-orange transition-colors"
+                      />
+                      <input
+                        value={selectedCategory.image}
+                        onChange={(event) => updateCategoryField('image', event.target.value)}
+                        className="bg-wood-medium/20 border border-gold/20 rounded-lg px-3 py-2 text-beige mt-2 text-xs"
+                        placeholder="Oppure inserisci URL immagine"
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between">
@@ -569,27 +580,94 @@ const AdminPanel = ({
                           className="w-full bg-wood-dark/40 border border-gold/15 rounded-lg px-3 py-2 text-beige min-h-[74px]"
                           placeholder="Descrizione"
                         />
-                        <div className="grid md:grid-cols-3 gap-2">
+                        <div className="flex flex-col gap-2 p-3 bg-wood-dark/20 rounded-xl border border-gold/10">
+                          <label className="text-xs uppercase tracking-widest text-gold/70">Immagine Prodotto</label>
                           <input
-                            value={product.price || ''}
-                            onChange={(event) => updateProductField(product.id, 'price', event.target.value)}
-                            className="bg-wood-dark/40 border border-gold/15 rounded-lg px-3 py-2 text-beige"
-                            placeholder="Prezzo (es. 8.50€)"
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (!file) return;
+                              const reader = new FileReader();
+                              reader.onload = (ev) => {
+                                if (ev.target?.result) {
+                                  updateProductField(product.id, 'image', ev.target.result as string);
+                                }
+                              };
+                              reader.readAsDataURL(file);
+                            }}
+                            className="text-sm text-beige file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-gold file:text-wood-dark hover:file:bg-accent-orange transition-colors"
                           />
                           <input
                             value={product.image}
                             onChange={(event) => updateProductField(product.id, 'image', event.target.value)}
-                            className="md:col-span-2 bg-wood-dark/40 border border-gold/15 rounded-lg px-3 py-2 text-beige"
-                            placeholder="URL foto prodotto"
+                            className="w-full bg-wood-dark/40 border border-gold/15 rounded-lg px-3 py-2 text-beige text-xs"
+                            placeholder="Oppure inserisci URL foto"
                           />
-                          <a
-                            href={IMAGE_UPLOAD_HELPER_URL}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="md:col-span-3 text-xs text-gold/80 hover:text-gold transition-colors"
-                          >
-                            Carica foto prodotto e incolla URL
-                          </a>
+                        </div>
+
+                        <div className="space-y-3 mt-3 p-3 bg-wood-dark/20 rounded-xl border border-gold/10">
+                          <div className="flex flex-col gap-1">
+                            <label className="text-xs uppercase tracking-widest text-gold/70">Prezzo Unico</label>
+                            <input
+                              value={product.price || ''}
+                              onChange={(event) => {
+                                updateProductField(product.id, 'price', event.target.value);
+                                updateProductField(product.id, 'prices', undefined);
+                              }}
+                              className="w-full bg-wood-dark/40 border border-gold/15 rounded-lg px-3 py-2 text-beige"
+                              placeholder="Prezzo (es. 8.50€)"
+                              disabled={!!product.prices?.length}
+                            />
+                          </div>
+
+                          <div className="flex justify-between items-center mt-3 pt-3 border-t border-gold/10">
+                            <label className="text-xs uppercase tracking-widest text-gold/70">Formati Multipli (es. per cl)</label>
+                            <button
+                              onClick={() => {
+                                const currentPrices = product.prices || [];
+                                updateProductField(product.id, 'prices', [...currentPrices, { label: '33cl', value: '5.00€' }]);
+                                updateProductField(product.id, 'price', undefined);
+                              }}
+                              className="px-2 py-1 bg-gold/10 text-gold text-xs rounded border border-gold/20 hover:bg-gold/20 transition-colors"
+                            >
+                              + Formato
+                            </button>
+                          </div>
+                          
+                          {product.prices?.map((p, pIndex) => (
+                            <div key={pIndex} className="flex gap-2 items-center">
+                              <input
+                                value={p.label}
+                                onChange={(e) => {
+                                  const newPrices = [...(product.prices || [])];
+                                  newPrices[pIndex] = { ...newPrices[pIndex], label: e.target.value };
+                                  updateProductField(product.id, 'prices', newPrices);
+                                }}
+                                className="w-1/3 bg-wood-dark/40 border border-gold/15 rounded-lg px-2 py-1.5 text-beige text-sm"
+                                placeholder="es. 33cl"
+                              />
+                              <input
+                                value={p.value}
+                                onChange={(e) => {
+                                  const newPrices = [...(product.prices || [])];
+                                  newPrices[pIndex] = { ...newPrices[pIndex], value: e.target.value };
+                                  updateProductField(product.id, 'prices', newPrices);
+                                }}
+                                className="flex-1 bg-wood-dark/40 border border-gold/15 rounded-lg px-2 py-1.5 text-beige text-sm"
+                                placeholder="Prezzo"
+                              />
+                              <button
+                                onClick={() => {
+                                  const newPrices = (product.prices || []).filter((_, i) => i !== pIndex);
+                                  updateProductField(product.id, 'prices', newPrices.length ? newPrices : undefined);
+                                }}
+                                className="text-red-400 p-1 rounded hover:bg-red-500/20"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                            </div>
+                          ))}
                         </div>
                         <input
                           value={product.allergens?.join(', ') || ''}
@@ -707,7 +785,6 @@ const PrivacyPolicyModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () 
               <h3 className="text-gold uppercase tracking-wider text-xs mb-1">Titolare del trattamento</h3>
               <p>Dragonfly Live Music Pub</p>
               <p>Email: info@dragonflypub.it</p>
-              <p>Partita IVA: DA INSERIRE</p>
             </section>
 
             <section>
