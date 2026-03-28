@@ -1,4 +1,4 @@
-import { getStore } from "@netlify/blobs";
+import { getStore, connectLambda } from "@netlify/blobs";
 import type { Handler, HandlerEvent, HandlerContext } from "@netlify/functions";
 import { Buffer } from "node:buffer";
 
@@ -10,6 +10,8 @@ export const handler: Handler = async (event: HandlerEvent, context: HandlerCont
   };
 
   try {
+    connectLambda(event);
+
     if (event.httpMethod === 'OPTIONS') {
       return { statusCode: 200, headers, body: '' };
     }
