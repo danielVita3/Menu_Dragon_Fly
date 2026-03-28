@@ -676,6 +676,71 @@ const AdminAccessGate = ({
   </div>
 );
 
+const PrivacyPolicyModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => (
+  <AnimatePresence>
+    {isOpen && (
+      <>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/70 z-[100]"
+          onClick={onClose}
+        />
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 20, opacity: 0 }}
+          className="fixed inset-4 md:inset-10 z-[105] bg-wood-dark border border-gold/20 rounded-2xl overflow-hidden flex flex-col"
+        >
+          <div className="px-4 md:px-6 py-3 border-b border-gold/15 flex items-center justify-between">
+            <h2 className="vintage-title text-gold text-xl md:text-2xl">Privacy Policy</h2>
+            <button onClick={onClose} className="p-2 rounded-lg hover:bg-wood-light/20 transition-colors" aria-label="Chiudi privacy policy">
+              <X className="w-5 h-5 text-gold" />
+            </button>
+          </div>
+
+          <div className="flex-1 overflow-y-auto px-4 md:px-6 py-4 space-y-4 text-sm text-beige/85 leading-relaxed">
+            <p>Ultimo aggiornamento: 28/03/2026</p>
+
+            <section>
+              <h3 className="text-gold uppercase tracking-wider text-xs mb-1">Titolare del trattamento</h3>
+              <p>Dragonfly Live Music Pub</p>
+              <p>Email: info@dragonflypub.it</p>
+              <p>Partita IVA: DA INSERIRE</p>
+            </section>
+
+            <section>
+              <h3 className="text-gold uppercase tracking-wider text-xs mb-1">Dati raccolti</h3>
+              <p>Possiamo trattare dati di contatto inviati volontariamente e dati tecnici di navigazione necessari al funzionamento del sito.</p>
+            </section>
+
+            <section>
+              <h3 className="text-gold uppercase tracking-wider text-xs mb-1">Finalita del trattamento</h3>
+              <p>I dati sono trattati per rispondere alle richieste, gestire il servizio e garantire sicurezza e funzionamento della piattaforma.</p>
+            </section>
+
+            <section>
+              <h3 className="text-gold uppercase tracking-wider text-xs mb-1">Base giuridica</h3>
+              <p>Esecuzione di misure precontrattuali, adempimenti di legge e legittimo interesse del titolare.</p>
+            </section>
+
+            <section>
+              <h3 className="text-gold uppercase tracking-wider text-xs mb-1">Conservazione</h3>
+              <p>I dati sono conservati per il tempo strettamente necessario alle finalita indicate e agli obblighi normativi.</p>
+            </section>
+
+            <section>
+              <h3 className="text-gold uppercase tracking-wider text-xs mb-1">Diritti dell interessato</h3>
+              <p>Puoi richiedere accesso, rettifica, cancellazione, limitazione, opposizione e portabilita dei dati scrivendo a info@dragonflypub.it.</p>
+            </section>
+          </div>
+        </motion.div>
+      </>
+    )}
+  </AnimatePresence>
+);
+
 // --- Main App ---
 
 export default function App() {
@@ -683,6 +748,7 @@ export default function App() {
   const [currentCategory, setCurrentCategory] = useState<Category | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAuthReady, setIsAuthReady] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -899,6 +965,8 @@ export default function App() {
         onLogout={logoutAdmin}
       />
 
+      <PrivacyPolicyModal isOpen={isPrivacyOpen} onClose={() => setIsPrivacyOpen(false)} />
+
       {isAdminRoute && !isAuthenticated && (
         <AdminAccessGate
           isAuthReady={isAuthReady}
@@ -942,7 +1010,12 @@ export default function App() {
                   </div>
 
                   <div className="text-right">
-                    <a href="#" className="text-[11px] md:text-xs uppercase tracking-[0.16em] text-beige/65 hover:text-gold transition-colors">Credits</a>
+                    <button
+                      onClick={() => setIsPrivacyOpen(true)}
+                      className="text-[11px] md:text-xs uppercase tracking-[0.16em] text-beige/65 hover:text-gold transition-colors"
+                    >
+                      Privacy Policy
+                    </button>
                     <div className="mt-2 flex items-center justify-end pr-0 md:pr-0 -mr-2 md:-mr-3">
                       <img
                         src="/Scritta_Logo-NoSfondo.webp"
