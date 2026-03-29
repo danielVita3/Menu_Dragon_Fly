@@ -17,7 +17,7 @@ import {
   Phone,
   AlertCircle
 } from 'lucide-react';
-import { MENU_DATA, Category, Product, SERVICE_CHARGE } from './data';
+import { MENU_DATA, Category, Product, ProductAddon, SERVICE_CHARGE } from './data';
 
 const MENU_STORAGE_KEY = 'dragonfly-menu-data-v1';
 const IMAGE_UPLOAD_HELPER_URL = 'https://postimages.org/';
@@ -93,7 +93,7 @@ const Header = ({
   onNextCategory,
   onLogoClick,
   showBack = false, 
-  title = "DRAGONFLY" 
+  title = "DRAGONFLY17" 
 }: { 
   onMenuClick: () => void; 
   onBack?: () => void; 
@@ -119,9 +119,9 @@ const Header = ({
     <div className="mx-auto flex flex-col items-center justify-center min-w-0 px-14">
       {!showBack ? (
         <img
-          src="/dragonfly-logo.png"
-          alt="Dragonfly Live Music Pub"
-          className="h-10 md:h-11 w-auto object-contain"
+          src="/dragonfly-logoV.png"
+          alt="Dragonfly17 Live Music Pub"
+          className="h-17 md:h-20 w-auto object-contain brightness-110 contrast-110 saturate-125 drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]"
           referrerPolicy="no-referrer"
         />
       ) : (
@@ -145,7 +145,7 @@ const Header = ({
       )}
     </div>
     
-    <div className="absolute right-[10px] md:right-[14px] top-1/2 -translate-y-1/2 flex items-center justify-end w-[88px]">
+    <div className="absolute right-[10px] md:right-[14px] top-1/2 -translate-y-1/2 flex items-center justify-end w-[96px] md:w-[104px]">
       {showBack ? (
         <button
           onClick={onLogoClick}
@@ -153,9 +153,9 @@ const Header = ({
           aria-label="Torna alla home"
         >
           <img
-            src="/dragonfly-logo.png"
+            src="/dragonfly-logoV.png"
             alt="Dragonfly logo"
-            className="h-[64px] md:h-[72px] w-auto object-contain"
+            className="h-[72px] md:h-[80px] w-auto object-contain brightness-110 contrast-110 saturate-125 drop-shadow-[0_0_12px_rgba(212,175,55,0.4)]"
             referrerPolicy="no-referrer"
           />
         </button>
@@ -174,7 +174,7 @@ const Header = ({
 );
 
 const Hero = ({ onCategorySelect }: { onCategorySelect: (id: string) => void }) => (
-  <section className="relative -mt-16 h-[60vh] md:h-[68vh] w-full overflow-hidden">
+  <section className="relative -mt-16 h-[50vh] md:h-[58vh] w-full overflow-hidden">
     <img 
       src="/dragonfly-hero.webp"
       alt="Dragon Fly Pub Atmosphere" 
@@ -240,7 +240,7 @@ const QuickMenuList = ({ categories, onSelect }: { categories: Category[]; onSel
         <button
           key={cat.id}
           onClick={() => onSelect(cat)}
-          className="whitespace-nowrap px-4 py-2 rounded-full border border-gold/30 text-beige hover:bg-gold hover:text-wood-dark transition-all text-sm font-medium"
+          className="whitespace-nowrap px-4 py-2 rounded-full border border-gold/30 text-beige hover:bg-gold hover:text-wood-dark transition-all text-base font-medium"
         >
           {cat.name}
         </button>
@@ -279,7 +279,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             <button 
               onClick={() => setShowAllergens(!showAllergens)}
               className="p-2 text-gold/60 hover:text-gold transition-colors"
-              title="Allergenici"
+              title="Allergeni"
             >
               <AlertCircle className="w-5 h-5" />
             </button>
@@ -296,7 +296,7 @@ const ProductCard = ({ product }: { product: Product }) => {
               className="overflow-hidden mb-4"
             >
               <div className="bg-wood-dark/40 rounded-xl p-3 border border-gold/10">
-                <p className="text-[10px] text-gold uppercase font-bold mb-2 tracking-widest">Allergenici:</p>
+                <p className="text-[10px] text-gold uppercase font-bold mb-2 tracking-widest">Allergeni:</p>
                 <div className="flex flex-wrap gap-2">
                   {product.allergens.map((a, i) => (
                     <span key={i} className="text-[10px] bg-gold/10 text-beige px-2 py-0.5 rounded-md border border-gold/20">
@@ -317,6 +317,20 @@ const ProductCard = ({ product }: { product: Product }) => {
                 <span className="text-cream font-bold">{p.value}</span>
               </div>
             ))}
+          </div>
+        )}
+
+        {product.addons && product.addons.length > 0 && (
+          <div className="mt-4 rounded-xl border border-gold/20 bg-wood-dark/35 p-3">
+            <p className="text-[10px] text-gold uppercase font-bold tracking-widest mb-2">Aggiunte</p>
+            <div className="grid gap-1.5">
+              {product.addons.map((addon, i) => (
+                <div key={i} className="flex items-center justify-between text-sm">
+                  <span className="text-beige/90">{addon.name}</span>
+                  <span className="text-gold font-semibold">{addon.price}</span>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
@@ -343,7 +357,7 @@ const Sidebar = ({ isOpen, onClose, categories, onCategorySelect, onContactClick
           className="fixed top-0 left-0 bottom-0 w-[80%] max-w-xs bg-wood-dark z-[70] p-8 card-shadow border-r border-gold/10 overflow-y-auto"
         >
           <div className="flex justify-between items-center mb-8">
-            <h2 className="vintage-title text-2xl text-gold uppercase tracking-wider">Dragonfly</h2>
+            <h2 className="vintage-title text-2xl text-gold uppercase tracking-wider">Dragonfly17</h2>
             <button onClick={onClose} className="p-2 text-beige">
               <X className="w-6 h-6" />
             </button>
@@ -383,7 +397,7 @@ const Sidebar = ({ isOpen, onClose, categories, onCategorySelect, onContactClick
           </div>
           
           <div className="mt-12 text-center">
-            <p className="text-[10px] text-beige/40 uppercase tracking-widest">© 2026 Dragonfly Live Music Pub</p>
+            <p className="text-[10px] text-beige/40 uppercase tracking-widest">© 2026 Dragonfly17 Live Music Pub</p>
           </div>
         </motion.div>
       </>
@@ -420,6 +434,8 @@ const AdminPanel = ({
     () => draft.find((cat) => cat.id === selectedCategoryId) || null,
     [draft, selectedCategoryId]
   );
+
+  const isPiadineCategory = selectedCategory?.id === 'piadine';
 
   const updateCategoryField = (field: 'name' | 'image', value: string) => {
     setDraft((prev) => prev.map((cat) => (cat.id === selectedCategoryId ? { ...cat, [field]: value } : cat)));
@@ -474,6 +490,11 @@ const AdminPanel = ({
   const addProduct = () => {
     if (!selectedCategoryId) return;
 
+    const currentCategory = draft.find((cat) => cat.id === selectedCategoryId);
+    if (currentCategory?.id === 'piadine' && currentCategory.products.length >= 1) {
+      return;
+    }
+
     const newProduct: Product = {
       id: createId('prod'),
       name: 'Nuovo Prodotto',
@@ -481,6 +502,7 @@ const AdminPanel = ({
       price: '0.00€',
       image: '/dragonfly-hero.webp',
       allergens: [],
+      addons: [],
     };
 
     setDraft((prev) =>
@@ -489,12 +511,66 @@ const AdminPanel = ({
   };
 
   const deleteProduct = (productId: string) => {
+    if (isPiadineCategory && selectedCategory?.products.length === 1) {
+      return;
+    }
+
     setDraft((prev) =>
       prev.map((cat) =>
         cat.id === selectedCategoryId
           ? { ...cat, products: cat.products.filter((product) => product.id !== productId) }
           : cat
       )
+    );
+  };
+
+  const addProductAddon = (productId: string) => {
+    setDraft((prev) =>
+      prev.map((cat) => {
+        if (cat.id !== selectedCategoryId) return cat;
+        return {
+          ...cat,
+          products: cat.products.map((product) => {
+            if (product.id !== productId) return product;
+            const nextAddons: ProductAddon[] = [...(product.addons || []), { name: 'Nuova aggiunta', price: '+0.50€' }];
+            return { ...product, addons: nextAddons };
+          }),
+        };
+      })
+    );
+  };
+
+  const updateProductAddon = (productId: string, index: number, field: keyof ProductAddon, value: string) => {
+    setDraft((prev) =>
+      prev.map((cat) => {
+        if (cat.id !== selectedCategoryId) return cat;
+        return {
+          ...cat,
+          products: cat.products.map((product) => {
+            if (product.id !== productId) return product;
+            const nextAddons = [...(product.addons || [])];
+            if (!nextAddons[index]) return product;
+            nextAddons[index] = { ...nextAddons[index], [field]: value };
+            return { ...product, addons: nextAddons };
+          }),
+        };
+      })
+    );
+  };
+
+  const deleteProductAddon = (productId: string, index: number) => {
+    setDraft((prev) =>
+      prev.map((cat) => {
+        if (cat.id !== selectedCategoryId) return cat;
+        return {
+          ...cat,
+          products: cat.products.map((product) => {
+            if (product.id !== productId) return product;
+            const nextAddons = (product.addons || []).filter((_, i) => i !== index);
+            return { ...product, addons: nextAddons.length ? nextAddons : [] };
+          }),
+        };
+      })
     );
   };
 
@@ -595,8 +671,12 @@ const AdminPanel = ({
 
                   <div className="flex items-center justify-between">
                     <p className="text-xs uppercase tracking-widest text-gold/70">Prodotti ({selectedCategory.products.length})</p>
-                    <button onClick={addProduct} className="px-3 py-2 border border-gold/30 rounded-lg text-gold text-sm hover:bg-gold/10 transition-colors">
-                      + Prodotto
+                    <button
+                      onClick={addProduct}
+                      disabled={isPiadineCategory && selectedCategory.products.length >= 1}
+                      className="px-3 py-2 border border-gold/30 rounded-lg text-gold text-sm hover:bg-gold/10 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                      {isPiadineCategory ? 'Solo 1 Piadina' : '+ Prodotto'}
                     </button>
                   </div>
 
@@ -607,7 +687,8 @@ const AdminPanel = ({
                           <p className="text-gold text-sm uppercase tracking-wider">{product.name}</p>
                           <button
                             onClick={() => deleteProduct(product.id)}
-                            className="px-2 py-1 text-xs border border-red-300/40 rounded-md text-red-200 hover:bg-red-500/10 transition-colors"
+                            disabled={isPiadineCategory && selectedCategory.products.length === 1}
+                            className="px-2 py-1 text-xs border border-red-300/40 rounded-md text-red-200 hover:bg-red-500/10 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                           >
                             Elimina
                           </button>
@@ -719,6 +800,43 @@ const AdminPanel = ({
                           className="w-full bg-wood-dark/40 border border-gold/15 rounded-lg px-3 py-2 text-beige"
                           placeholder="Allergeni separati da virgola"
                         />
+
+                        {isPiadineCategory && (
+                          <div className="space-y-3 mt-3 p-3 bg-wood-dark/20 rounded-xl border border-gold/10">
+                            <div className="flex justify-between items-center">
+                              <label className="text-xs uppercase tracking-widest text-gold/70">Aggiunte personalizzabili</label>
+                              <button
+                                onClick={() => addProductAddon(product.id)}
+                                className="px-2 py-1 bg-gold/10 text-gold text-xs rounded border border-gold/20 hover:bg-gold/20 transition-colors"
+                              >
+                                + Aggiunta
+                              </button>
+                            </div>
+
+                            {(product.addons || []).map((addon, addonIndex) => (
+                              <div key={addonIndex} className="flex gap-2 items-center">
+                                <input
+                                  value={addon.name}
+                                  onChange={(e) => updateProductAddon(product.id, addonIndex, 'name', e.target.value)}
+                                  className="flex-1 bg-wood-dark/40 border border-gold/15 rounded-lg px-2 py-1.5 text-beige text-sm"
+                                  placeholder="Nome aggiunta"
+                                />
+                                <input
+                                  value={addon.price}
+                                  onChange={(e) => updateProductAddon(product.id, addonIndex, 'price', e.target.value)}
+                                  className="w-28 bg-wood-dark/40 border border-gold/15 rounded-lg px-2 py-1.5 text-beige text-sm"
+                                  placeholder="+1.00€"
+                                />
+                                <button
+                                  onClick={() => deleteProductAddon(product.id, addonIndex)}
+                                  className="text-red-400 p-1 rounded hover:bg-red-500/20"
+                                >
+                                  <X className="w-4 h-4" />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     ))}
                     {selectedCategory.products.length === 0 && (
@@ -827,8 +945,8 @@ const PrivacyPolicyModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () 
 
             <section>
               <h3 className="text-gold uppercase tracking-wider text-xs mb-1">Titolare del trattamento</h3>
-              <p>Dragonfly Live Music Pub</p>
-              <p>Email: info@dragonflypub.it</p>
+              <p>Dragonfly17 Live Music Pub</p>
+              <p>Email: diciasettefg@libero.it</p>
             </section>
 
             <section>
@@ -1058,7 +1176,7 @@ export default function App() {
           setSearchQuery("");
         }}
         showBack={!!currentCategory}
-        title={currentCategory ? currentCategory.name.toUpperCase() : "DRAGONFLY"}
+        title={currentCategory ? currentCategory.name.toUpperCase() : "DRAGONFLY17"}
       />
       
       <Sidebar 
@@ -1142,8 +1260,9 @@ export default function App() {
                     <a href="#" className="text-[11px] md:text-xs uppercase tracking-[0.14em] text-beige/80 hover:text-gold transition-colors">Contattaci</a>
                     <div className="mt-1.5 text-[11px] md:text-xs text-beige/70 leading-tight space-y-0.5">
                       <p>+39 389 598 1018</p>
-                      <p>+39 333 123 4567</p>
-                      <p>info@dragonflypub.it</p>
+                      <p>+39 388 955 5020</p>
+                      <p>+39 0825 194 8323</p>
+                      <p>diciasettefg@libero.it</p>
                     </div>
                   </div>
 

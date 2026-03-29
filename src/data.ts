@@ -3,12 +3,18 @@ export interface ProductPrice {
   value: string;
 }
 
+export interface ProductAddon {
+  name: string;
+  price: string;
+}
+
 export interface Product {
   id: string;
   name: string;
   description: string;
   price?: string;
   prices?: ProductPrice[];
+  addons?: ProductAddon[];
   image: string;
   allergens?: string[];
 }
@@ -28,11 +34,11 @@ export const MENU_DATA: Category[] = [
     id: "panini",
     name: "Panini",
     icon: "🍔",
-    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=800",
+    image: "https://pixabay.com/get/g6020268201e6f65c825d672fbe2e207452fbc8627a906992cbba50c12f0e694ad595afa88800b4b6ab7d801f9e76162e_1920.jpg",
     products: [
       {
         id: "p1",
-        name: "Dragonfly Burger",
+        name: "Dragonfly17 Burger",
         description: "Manzo 200g, cheddar, bacon croccante, cipolla caramellata, salsa segreta.",
         price: "12.50€",
         image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=800",
@@ -59,21 +65,22 @@ export const MENU_DATA: Category[] = [
     id: "piadine",
     name: "Piadine",
     icon: "🌯",
-    image: "https://images.unsplash.com/photo-1628191010210-a59de33e5941?auto=format&fit=crop&q=80&w=800",
+    image: "https://pixabay.com/get/g56ae24f9f90166d39e871fe217befdad8d50b1f60dfa89d2f90fbe6fb1051a9e32a195f6903827f11b76c41d78668329_1920.jpg",
     products: [
       {
         id: "pi1",
-        name: "Classica",
-        description: "Prosciutto crudo, squacquerone, rucola.",
-        price: "7.50€",
-        image: "https://images.unsplash.com/photo-1628191010210-a59de33e5941?auto=format&fit=crop&q=80&w=800"
-      },
-      {
-        id: "pi2",
-        name: "Contadina",
-        description: "Salsiccia, peperoni, cipolla.",
-        price: "8.50€",
-        image: "https://images.unsplash.com/photo-1512152272829-e3139592d56f?auto=format&fit=crop&q=80&w=800"
+        name: "Piadina Personalizzabile",
+        description: "Base piadina da comporre come vuoi: scegli gli extra qui sotto.",
+        price: "5.00€",
+        image: "https://pixabay.com/get/g189a821c8f564141566b04d456fba53a9da8072efa9fb5d96e5848ba86993a8006208c5b174b2cb3c9247922fdea30d1_1920.jpg",
+        addons: [
+          { name: "Prosciutto crudo", price: "+2.00€" },
+          { name: "Squacquerone", price: "+1.50€" },
+          { name: "Rucola", price: "+0.80€" },
+          { name: "Salsiccia", price: "+2.20€" },
+          { name: "Peperoni", price: "+1.00€" },
+          { name: "Cipolla", price: "+0.70€" }
+        ]
       }
     ]
   },
@@ -81,7 +88,7 @@ export const MENU_DATA: Category[] = [
     id: "fritti",
     name: "Fritti",
     icon: "🍟",
-    image: "https://images.unsplash.com/photo-1573016608464-54269945138e?auto=format&fit=crop&q=80&w=800",
+    image: "https://pixabay.com/get/g1763d19c94e4d13fe5c4c08d4bdc39d911ea66a89529b24a269e9974c23edbfa3d41b09430955d4b04943a9123f7aafc_1920.jpg",
     products: [
       {
         id: "f1",
@@ -110,7 +117,7 @@ export const MENU_DATA: Category[] = [
     id: "cocktail",
     name: "Cocktail",
     icon: "🍸",
-    image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=800",
+    image: "https://pixabay.com/get/g8ff6e44b22c7b32ae1071881c32efa623f8e16628b6505c030af73bb190c6c6cb12c2eb84f2f694c942393d527589182_1920.jpg",
     products: [
       {
         id: "c1",
@@ -132,7 +139,7 @@ export const MENU_DATA: Category[] = [
     id: "birre",
     name: "Birre",
     icon: "🍺",
-    image: "https://images.unsplash.com/photo-1535958636474-b021ee887b13?auto=format&fit=crop&q=80&w=800",
+    image: "https://pixabay.com/get/g967922e805207d7d741431846cd6e020bc4ffdc37271bcb76a900cb0f8365224266b278122f4a8b9a48f05e71e032869_1920.jpg",
     products: [
       {
         id: "b1",
@@ -161,7 +168,7 @@ export const MENU_DATA: Category[] = [
     id: "birre-artigianali",
     name: "Birre Artigianali",
     icon: "🍻",
-    image: "https://images.unsplash.com/photo-1566633806327-68e152aaf26d?auto=format&fit=crop&q=80&w=800",
+    image: "https://pixabay.com/get/g30fe19f5f64efddafbe3c251076331bd21c937244b1ae1989c02b1a2ae7608e1db602750e6eb040f35afbe787d51f42d_1920.jpg",
     products: [
       {
         id: "ba1",
@@ -189,7 +196,7 @@ export const MENU_DATA: Category[] = [
     id: "bibite",
     name: "Bibite",
     icon: "🥤",
-    image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&q=80&w=800",
+    image: "https://pixabay.com/get/gbd8d9efeb6925c5b3814b4ae3537737c088fbd0e99f590b84cfa80164cac819ecc2e2bd581c6396f51915b5aeb9b98ea_1920.jpg",
     products: [
       {
         id: "bi1",
@@ -211,7 +218,7 @@ export const MENU_DATA: Category[] = [
     id: "dolci",
     name: "Dolci",
     icon: "🍰",
-    image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&q=80&w=800",
+    image: "https://pixabay.com/get/g485b9e841d1ec7d624a280f09def9526f41843ae07ee38f18f99ae7586d979117801e84830a78e364c5d8e7608436360_1920.jpg",
     products: [
       {
         id: "d1",
@@ -233,7 +240,7 @@ export const MENU_DATA: Category[] = [
     id: "amari",
     name: "Amari",
     icon: "🥃",
-    image: "https://images.unsplash.com/photo-1569701813229-33284b643e3c?auto=format&fit=crop&q=80&w=800",
+    image: "https://pixabay.com/get/geec1c368c9d2f097d495740ee357bc70068e60dffcb20f30c01969da66b71c706b0a0d2dfcca34726585da23d93d0eff_1920.jpg",
     products: [
       {
         id: "a1",
